@@ -2,79 +2,30 @@ import streamlit as st
 from datetime import datetime, timedelta
 import pytz
 import requests
-
-# Alpha Vantage API Key (Replace with your own key)
-alpha_vantage_api_key = "YOUR_ALPHA_VANTAGE_API_KEY"
-
-# OpenWeatherMap API Key (Replace with your own key)
-openweathermap_api_key = "YOUR_OPENWEATHERMAP_API_KEY"
-
-def get_stock_data(symbol):
-    endpoint = "https://www.alphavantage.co/query"
-    params = {
-        "function": "GLOBAL_QUOTE",
-        "symbol": symbol,
-        "apikey": alpha_vantage_api_key
-    }
-
-    response = requests.get(endpoint, params=params)
-    print(response)
-    data = response.json()
-    print(data)
+import yfinance as yf
 
 
-    if "Global Quote" in data:
-        return data["Global Quote"]
-    else:
-        return None
+def get_index_price(index_symbol):
+    stock = yf.Ticker(index_symbol)
+    st.subheader(f"INDEX: {index_symbol}")
+    stock_data = stock.history(period="1d")
+    st.write(stock_data)
+    index_data = yf.Ticker(index_symbol).info
+    return index_data.get('lastPrice', 'N/A')
 
-def get_weather_data(city):
-    endpoint = "https://api.openweathermap.org/data/2.5/weather"
-    params = {
-        "q": city,
-        "appid": openweathermap_api_key
-    }
-
-    response = requests.get(endpoint, params=params)
-    data = response.json()
-
-    if "main" in data and "weather" in data:
-        return data
-    else:
-        return None
+def get_stock_price(stock_symbol):
+    stock = yf.Ticker(stock_symbol)
+    st.subheader(f"Stock: {stock_symbol}")
+    stock_data = stock.history(period="1d")
+    st.write(stock_data)
+    stock_data = yf.Ticker(stock_symbol).info
+    return stock_data.get('lastPrice', 'N/A')
 
 
 
 # Streamlit app
 def main():
-
-    st.title("Real-time World Information")
-
-    # Nasdaq
-    nasdaq_data = get_stock_data("^IXIC")
-    if nasdaq_data:
-        st.write(f"**Nasdaq Index:** {nasdaq_data['05. price']}")
-        st.write(f"**Change:** {nasdaq_data['10. change percent']}")
-    else:
-        st.warning("Nasdaq data not available.")
-
-    # Dow Jones Industrial Average
-    dow_data = get_stock_data("^DJI")
-    if dow_data:
-        st.write(f"**Dow Jones Index:** {dow_data['05. price']}")
-        st.write(f"**Change:** {dow_data['10. change percent']}")
-    else:
-        st.warning("Dow Jones data not available.")
-
-    # Seattle Weather
-    seattle_data = get_weather_data("Seattle")
-    if seattle_data:
-        st.write(f"**Temperature in Seattle:** {seattle_data['main']['temp']} °C")
-        st.write(f"**Weather:** {seattle_data['weather'][0]['description']}")
-    else:
-        st.warning("Seattle weather data not available.")
-
-
+   
     st.title("World Clock")
 
     # Dropdown with 20 world cities
@@ -231,9 +182,26 @@ def main():
     </body>
     </html>
     """
-
     # Display HTML code
-    st.components.v1.html(html_code, width=1200, height=600)
+    st.components.v1.html(html_code, width=1200, height=500)
+
+    st.title("Real-time Index and FAANG Stock Information")
+    # Nasdaq Index
+    st.write(f"**Nasdaq Index:**")
+    nasdaq_price = get_index_price("^IXIC")  # Nasdaq symbol
+    #st.write(f"**Nasdaq Index:** {nasdaq_price}")
+
+    # Dow Jones Industrial Average
+    st.write(f"**DOW Index:**")
+    dow_price = get_index_price("^DJI")  # Dow Jones symbol
+    #st.write(f"**Dow Jones Index:** {dow_price}")
+
+    # FAANG Stocks
+    faang_symbols = ["META", "AAPL", "AMZN", "NFLX", "GOOGL"]
+    st.write("**FAANG Stocks:**")
+    for symbol in faang_symbols:
+        stock_price = get_stock_price(symbol)
+    #   st.write(f"**{symbol}:** {stock_price}")
 
 # Function to get the list of 20 world cities
 def get_city_list():
