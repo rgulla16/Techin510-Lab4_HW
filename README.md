@@ -22,9 +22,9 @@ This Python application uses the tkinter library to create a GUI with four world
 Follow these instructions to get a copy of the project up and running on your local machine.
 Install the required Python packages:
 bash
-Copy code
+Copy code: 
 pip install -r requirements.txt
-Usage
+Usage: 
 Run the Streamlit app:
 
 bash
@@ -32,13 +32,10 @@ Copy code
 streamlit run world_clock.py
 Open your web browser and navigate to the provided URL to interact with the application.
 
-Contributing
-If you would like to contribute or have suggestions, please open an issue or submit a pull request.
 
-
-Acknowledgments
+### Libraries: 
 Streamlit for providing an easy way to create interactive web applications.
 yfinance for fetching stock market data.
 
-Issues
-I was not able to  reduce the width of the drop downs. Also the circle of the clock seems to have vanished. I am unable to draw it satisfactorily.
+### Issues: 
+Also the circle of the clock seems to have vanished. I am unable to draw it satisfactorily.

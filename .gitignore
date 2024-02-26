@@ -1,2 +1,10 @@
 venv
 *.pyc
+app_1.py
+app2.py
+app3.py
+clock_face.png
+world_clock1.py
+world_clock2.py
+world_clock_st.py
+stock.py
